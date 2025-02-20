@@ -15,7 +15,9 @@ const ProductForm = ({ product, onSuccess }) => {
     });
 
     const [categories, setCategories] = useState([]);
+    const [selectedImage, setSelectedImage] = useState(null); // Hiển thị ảnh mới khi chọn
 
+    // Lấy danh mục sản phẩm
     useEffect(() => {
         const fetchCategories = async () => {
             try {
@@ -25,24 +27,27 @@ const ProductForm = ({ product, onSuccess }) => {
                 console.error('Lỗi khi lấy danh mục:', error);
             }
         };
-
         fetchCategories();
     }, []);
 
-    useEffect(() => {
+    // Load dữ liệu sản phẩm nếu đang chỉnh sửa
+    useEffect(() => { 
         if (product) {
             setFormData({
                 name: product.name || '',
                 price: product.price || '',
                 discount: product.discount || '',
                 quantity: product.quantity || '',
-                image: null,
+                image: null, // Không load ảnh cũ vào input file
                 category: product.category?._id || product.category || '',
                 description: product.description || ''
             });
+
+            setSelectedImage(product.image || null); // Hiển thị ảnh cũ
         }
     }, [product]);
 
+    // Xử lý thay đổi input text
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevState) => ({
@@ -51,19 +56,25 @@ const ProductForm = ({ product, onSuccess }) => {
         }));
     };
 
+    // Xử lý thay đổi file ảnh
     const handleFileChange = (e) => {
         const file = e.target.files[0];
-        setFormData((prevState) => ({
-            ...prevState,
-            image: file,
-        }));
+        if (file) {
+            setFormData((prevState) => ({
+                ...prevState,
+                image: file, // Lưu file mới
+            }));
+            setSelectedImage(URL.createObjectURL(file)); // Hiển thị ảnh mới
+        }
     };
 
+    // Xử lý submit form
     const handleSubmit = async (e) => {
         e.preventDefault();
         const form = new FormData();
 
         Object.keys(formData).forEach((key) => {
+            if (key === "image" && !formData.image) return; // Không gửi ảnh nếu không chọn mới
             if (formData[key] !== null && formData[key] !== '') {
                 form.append(key, formData[key]);
             }
@@ -74,17 +85,18 @@ const ProductForm = ({ product, onSuccess }) => {
                 await updateProduct(product._id, form);
             } else {
                 await createProduct(form);
+                setFormData({
+                    name: '',
+                    price: '',
+                    discount: '',
+                    quantity: '',
+                    image: null,
+                    category: '',
+                    description: ''
+                });
+                setSelectedImage(null);
             }
-            onSuccess();
-            setFormData({
-                name: '',
-                price: '',
-                discount: '',
-                quantity: '',
-                image: null,
-                category: '',
-                description: ''
-            });
+            onSuccess(); // Reload danh sách sản phẩm
         } catch (error) {
             console.error('Lỗi khi xử lý sản phẩm:', error);
         }
@@ -115,6 +127,11 @@ const ProductForm = ({ product, onSuccess }) => {
             <div className="product-form__group">
                 <label className="product-form__label">Ảnh sản phẩm:</label>
                 <input type="file" className="product-form__input" accept="image/*" onChange={handleFileChange} />
+                {selectedImage && (
+                    <div className="product-form__preview">
+                        <img src={selectedImage} alt="Ảnh sản phẩm" width={50}/>
+                    </div>
+                )}
             </div>
 
             <div className="product-form__group">
@@ -132,7 +149,9 @@ const ProductForm = ({ product, onSuccess }) => {
                 <textarea className="product-form__textarea" name="description" value={formData.description} onChange={handleChange} rows="4" required />
             </div>
 
-            <button type="submit" className="product-form__button">{product ? 'Cập nhật' : 'Thêm mới'}</button>
+            <button type="submit" className="product-form__button">
+                {product ? 'Cập nhật' : 'Thêm mới'}
+            </button>
         </form>
     );
 };
