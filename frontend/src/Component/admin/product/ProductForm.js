@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { createProduct, updateProduct } from '../../../services/productService';
 import { getCategories } from '../../../services/categoryService';
+import './ProductForm.css';
 
 const ProductForm = ({ product, onSuccess }) => {
     const [formData, setFormData] = useState({
@@ -90,34 +91,48 @@ const ProductForm = ({ product, onSuccess }) => {
     };
 
     return (
-        <form onSubmit={handleSubmit} encType="multipart/form-data">
-            <label>Tên sản phẩm:</label>
-            <input type="text" name="name" value={formData.name} onChange={handleChange} required />
+        <form className="product-form" onSubmit={handleSubmit} encType="multipart/form-data">
+            <div className="product-form__group">
+                <label className="product-form__label">Tên sản phẩm:</label>
+                <input type="text" className="product-form__input" name="name" value={formData.name} onChange={handleChange} required />
+            </div>
 
-            <label>Giá:</label>
-            <input type="number" name="price" value={formData.price} onChange={handleChange} required min="0" />
+            <div className="product-form__group">
+                <label className="product-form__label">Giá:</label>
+                <input type="number" className="product-form__input" name="price" value={formData.price} onChange={handleChange} required min="0" />
+            </div>
 
-            <label>Số lượng:</label>
-            <input type="number" name="quantity" value={formData.quantity} onChange={handleChange} required min="0" />
+            <div className="product-form__group">
+                <label className="product-form__label">Số lượng:</label>
+                <input type="number" className="product-form__input" name="quantity" value={formData.quantity} onChange={handleChange} required min="0" />
+            </div>
 
-            <label>Giảm giá (%):</label>
-            <input type="number" name="discount" value={formData.discount} onChange={handleChange} min="0" />
+            <div className="product-form__group">
+                <label className="product-form__label">Giảm giá (%):</label>
+                <input type="number" className="product-form__input" name="discount" value={formData.discount} onChange={handleChange} min="0" />
+            </div>
 
-            <label>Ảnh sản phẩm:</label>
-            <input type="file" accept="image/*" onChange={handleFileChange} />
+            <div className="product-form__group">
+                <label className="product-form__label">Ảnh sản phẩm:</label>
+                <input type="file" className="product-form__input" accept="image/*" onChange={handleFileChange} />
+            </div>
 
-            <label>Danh mục:</label>
-            <select name="category" value={formData.category} onChange={handleChange} required>
-                <option value="">Chọn danh mục</option>
-                {categories.map((cat) => (
-                    <option key={cat._id} value={cat._id}>{cat.name}</option>
-                ))}
-            </select>
+            <div className="product-form__group">
+                <label className="product-form__label">Danh mục:</label>
+                <select className="product-form__select" name="category" value={formData.category} onChange={handleChange} required>
+                    <option value="">Chọn danh mục</option>
+                    {categories.map((cat) => (
+                        <option key={cat._id} value={cat._id}>{cat.name}</option>
+                    ))}
+                </select>
+            </div>
 
-            <label>Mô tả sản phẩm:</label>
-            <textarea name="description" value={formData.description} onChange={handleChange} rows="4" required />
+            <div className="product-form__group">
+                <label className="product-form__label">Mô tả sản phẩm:</label>
+                <textarea className="product-form__textarea" name="description" value={formData.description} onChange={handleChange} rows="4" required />
+            </div>
 
-            <button type="submit">{product ? 'Cập nhật' : 'Thêm mới'}</button>
+            <button type="submit" className="product-form__button">{product ? 'Cập nhật' : 'Thêm mới'}</button>
         </form>
     );
 };

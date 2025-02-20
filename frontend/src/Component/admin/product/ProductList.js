@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { getProducts, deleteProduct } from '../../../services/productService';
 import ProductForm from './ProductForm';
+import './ProductList.css';
 
 const ProductList = () => {
     const [products, setProducts] = useState([]);
@@ -55,14 +56,14 @@ const ProductList = () => {
     };
 
     return (
-        <div>
-            <h2>Danh sách sản phẩm</h2>
-            <button onClick={openAddModal}>Thêm sản phẩm</button>
+        <div className="product-list">
+            <h2 className="product-list__header">Danh sách sản phẩm</h2>
+            <button className="product-list__button" onClick={openAddModal}>Thêm sản phẩm</button>
             
             {isModalOpen && (
                 <div className="modal">
-                    <div className="modal-content">
-                        <span className="close" onClick={closeModal}>&times;</span>
+                    <div className="modal__content">
+                        <span className="modal__close" onClick={closeModal}>&times;</span>
                         <ProductForm product={editingProduct} onSuccess={fetchProducts} onClose={closeModal} />
                     </div>
                 </div>
@@ -71,7 +72,7 @@ const ProductList = () => {
             {loading ? (
                 <p>Đang tải danh sách sản phẩm...</p>
             ) : (
-                <table border="1">
+                <table className="product-list__table">
                     <thead>
                         <tr>
                             <th>Tên</th>
@@ -87,7 +88,7 @@ const ProductList = () => {
                     <tbody>
                         {products.length > 0 ? (
                             products.map((product) => (
-                                <tr key={product._id}>
+                                <tr className="product-list__row" key={product._id}>
                                     <td>{product.name}</td>
                                     <td>{product.price}đ</td>
                                     <td>{product.quantity}</td>
@@ -95,17 +96,16 @@ const ProductList = () => {
                                     <td>{product.category?.name || 'Không có danh mục'}</td>
                                     <td>
                                         <img
+                                            className="product-list__image"
                                             src={product.image ? `http://localhost:3000${product.image}` : '/default-image.jpg'}
                                             alt={product.name}
-                                            width="50"
-                                            height="50"
                                             onError={(e) => e.target.src = '/default-image.jpg'}
                                         />
                                     </td>
                                     <td>{product.description || 'Không có mô tả'}</td>
                                     <td>
-                                        <button onClick={() => openEditModal(product)}>Sửa</button>
-                                        <button onClick={() => handleDelete(product._id)}>Xóa</button>
+                                        <button className="product-list__button" onClick={() => openEditModal(product)}>Sửa</button>
+                                        <button className="product-list__button" onClick={() => handleDelete(product._id)}>Xóa</button>
                                     </td>
                                 </tr>
                             ))

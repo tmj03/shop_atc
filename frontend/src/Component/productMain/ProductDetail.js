@@ -46,7 +46,13 @@ const ProductDetail = () => {
     return (
         <div>
             <h2>{product.name}</h2>
-            <img src={product.image} alt={product.name} />
+            <img
+                src={product.image ? `http://localhost:3000${product.image}` : '/default-image.jpg'}
+                alt={product.name}
+                width="50"
+                height="50"
+                onError={(e) => e.target.src = '/default-image.jpg'}
+            />
             <p>Giá: {product.price} VNĐ</p>
             <p>Mô tả: {product.description}</p>
             <p>Số lượng: {product.quantity}</p>

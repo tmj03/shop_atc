@@ -24,7 +24,13 @@ const ProductMain = () => {
             <div className="product-grid">
                 {products.map(product => (
                     <div key={product._id} className="product-card">
-                        <img src={product.image} alt={product.name} />
+                        <img
+                            src={product.image ? `http://localhost:3000${product.image}` : '/default-image.jpg'}
+                            alt={product.name}
+                            width="50"
+                            height="50"
+                            onError={(e) => e.target.src = '/default-image.jpg'}
+                        />
                         <h3>{product.name}</h3>
                         <p>Giá: {product.price} VNĐ</p>
                         <Link to={`/product/${product._id}`}>Xem chi tiết</Link>
