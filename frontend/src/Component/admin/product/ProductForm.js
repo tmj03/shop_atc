@@ -8,7 +8,7 @@ const ProductForm = ({ product, onSuccess }) => {
         price: '',
         discount: '',
         quantity: '',
-        image: '',
+        image: null,
         category: '',
         description: ''
     });
@@ -31,90 +31,91 @@ const ProductForm = ({ product, onSuccess }) => {
     useEffect(() => {
         if (product) {
             setFormData({
-                ...product,
-                category: product.category?._id || product.category || '' // Giữ danh mục cũ
+                name: product.name || '',
+                price: product.price || '',
+                discount: product.discount || '',
+                quantity: product.quantity || '',
+                image: null,
+                category: product.category?._id || product.category || '',
+                description: product.description || ''
             });
         }
     }, [product]);
 
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setFormData((prevState) => ({
+            ...prevState,
+            [name]: value,
+        }));
     };
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => {
-                setFormData({ ...formData, image: reader.result });
-            };
-        }
+        setFormData((prevState) => ({
+            ...prevState,
+            image: file,
+        }));
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
+        const form = new FormData();
+
+        Object.keys(formData).forEach((key) => {
+            if (formData[key] !== null && formData[key] !== '') {
+                form.append(key, formData[key]);
+            }
+        });
+
         try {
             if (product) {
-                await updateProduct(product._id, formData);
+                await updateProduct(product._id, form);
             } else {
-                await createProduct(formData);
+                await createProduct(form);
             }
             onSuccess();
-    
-            // Reset form sau khi thêm/cập nhật thành công
             setFormData({
                 name: '',
                 price: '',
                 discount: '',
                 quantity: '',
-                image: '',
+                image: null,
                 category: '',
                 description: ''
             });
-    
         } catch (error) {
-            console.error('Lỗi:', error);
+            console.error('Lỗi khi xử lý sản phẩm:', error);
         }
     };
-    
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} encType="multipart/form-data">
             <label>Tên sản phẩm:</label>
             <input type="text" name="name" value={formData.name} onChange={handleChange} required />
 
             <label>Giá:</label>
-            <input type="number" name="price" value={formData.price} onChange={handleChange} required />
+            <input type="number" name="price" value={formData.price} onChange={handleChange} required min="0" />
 
             <label>Số lượng:</label>
-            <input type="number" name="quantity" value={formData.quantity} onChange={handleChange} required />
+            <input type="number" name="quantity" value={formData.quantity} onChange={handleChange} required min="0" />
 
             <label>Giảm giá (%):</label>
-            <input type="number" name="discount" value={formData.discount} onChange={handleChange} />
+            <input type="number" name="discount" value={formData.discount} onChange={handleChange} min="0" />
 
             <label>Ảnh sản phẩm:</label>
-            <input type="file" accept="image/*" onChange={handleFileChange} required={!product} />
+            <input type="file" accept="image/*" onChange={handleFileChange} />
 
             <label>Danh mục:</label>
             <select name="category" value={formData.category} onChange={handleChange} required>
                 <option value="">Chọn danh mục</option>
                 {categories.map((cat) => (
-                    <option key={cat._id} value={cat._id}>
-                        {cat.name}
-                    </option>
+                    <option key={cat._id} value={cat._id}>{cat.name}</option>
                 ))}
             </select>
 
             <label>Mô tả sản phẩm:</label>
-            <textarea 
-                name="description" 
-                value={formData.description} 
-                onChange={handleChange} 
-                rows="4" 
-                required
-            />
+            <textarea name="description" value={formData.description} onChange={handleChange} rows="4" required />
 
             <button type="submit">{product ? 'Cập nhật' : 'Thêm mới'}</button>
         </form>

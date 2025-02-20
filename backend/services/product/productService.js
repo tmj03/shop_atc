@@ -1,19 +1,30 @@
 const Product = require('../../models/Product');
 
+// Kiểm tra dữ liệu và tạo sản phẩm mới
 const createProduct = async (data) => {
     try {
         const { name, price, discount, quantity, description, category, image } = data;
 
+        // Kiểm tra các trường bắt buộc
         if (!name || !price || !category) {
             throw new Error('Vui lòng nhập đầy đủ thông tin sản phẩm');
         }
 
-        // Mặc định số lượng là 0 nếu không nhập
+        // Kiểm tra giá trị hợp lệ của price, discount và quantity
+        const parsedPrice = parseFloat(price);
+        const parsedQuantity = parseInt(quantity, 10);
+        const parsedDiscount = discount ? parseFloat(discount) : 0;
+
+        if (isNaN(parsedPrice) || isNaN(parsedQuantity)) {
+            throw new Error('Giá và số lượng phải là số hợp lệ');
+        }
+
+        // Mặc định giảm giá và số lượng là 0 nếu không nhập
         const productData = {
             name,
-            price,
-            discount: discount || 0,  // Giảm giá mặc định là 0 nếu không có
-            quantity: quantity || 0,   // Số lượng mặc định là 0
+            price: parsedPrice,
+            discount: parsedDiscount,  // Giảm giá mặc định là 0 nếu không có
+            quantity: parsedQuantity,   // Số lượng mặc định là 0 nếu không có
             category,
             image,
             description,
@@ -29,6 +40,7 @@ const createProduct = async (data) => {
     }
 };
 
+// Lấy tất cả sản phẩm
 const getAllProducts = async () => {
     try {
         return await Product.find().populate('category', 'name');
@@ -37,10 +49,10 @@ const getAllProducts = async () => {
     }
 };
 
+// Cập nhật sản phẩm
 const updateProduct = async (id, data) => {
     try {
-        data.updatedAt = new Date(); // Cập nhật thời gian sửa đổi
-
+        // Đảm bảo cập nhật thời gian sửa đổi tự động qua Mongoose
         const updatedProduct = await Product.findByIdAndUpdate(id, data, { new: true });
 
         if (!updatedProduct) {
@@ -53,6 +65,7 @@ const updateProduct = async (id, data) => {
     }
 };
 
+// Xóa sản phẩm
 const deleteProduct = async (id) => {
     try {
         const deletedProduct = await Product.findByIdAndDelete(id);
@@ -67,7 +80,7 @@ const deleteProduct = async (id) => {
     }
 };
 
-// ✅ Thêm hàm lấy sản phẩm theo ID
+// Lấy sản phẩm theo ID
 const getProductById = async (id) => {
     try {
         const product = await Product.findById(id).populate('category', 'name');

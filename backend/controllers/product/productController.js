@@ -1,12 +1,23 @@
 const productService = require('../../services/product/productService');
+const upload = require('../../middleware/upload');
 
 const createProduct = async (req, res) => {
-    try {
-        const product = await productService.createProduct(req.body);
-        res.status(201).json({ message: 'Thêm sản phẩm thành công', product });
-    } catch (error) {
-        res.status(400).json({ error: error.message });
-    }
+    upload.single('image')(req, res, async (err) => {
+        if (err) {
+            return res.status(400).json({ message: err.message });
+        }
+        try {
+            const { name, price, discount, quantity, description, category } = req.body;
+            if (!name || !price || !quantity || !description || !category) {
+                return res.status(400).json({ message: 'Thiếu dữ liệu bắt buộc' });
+            }
+            const image = req.file ? `/uploads/images/${req.file.filename}` : '';
+            const newProduct = await productService.createProduct({ name, price, discount, quantity, description, category, image });
+            res.status(201).json(newProduct);
+        } catch (error) {
+            res.status(400).json({ message: error.message });
+        }
+    });
 };
 
 const getAllProducts = async (req, res) => {
@@ -36,35 +47,17 @@ const deleteProduct = async (req, res) => {
     }
 };
 
-const Product = require('../../models/Product');
-
 const getProductById = async (req, res) => {
     try {
         const { id } = req.params;
-
-        // Kiểm tra ID có đúng định dạng MongoDB không
         if (!id.match(/^[0-9a-fA-F]{24}$/)) {
             return res.status(400).json({ message: 'ID không hợp lệ' });
         }
-
-        const product = await Product.findById(id).populate('category', 'name');
-
-        if (!product) {
-            return res.status(404).json({ message: 'Sản phẩm không tồn tại' });
-        }
-
+        const product = await productService.getProductById(id);
         res.status(200).json(product);
     } catch (error) {
-        res.status(500).json({ error: 'Lỗi khi lấy thông tin sản phẩm' });
+        res.status(500).json({ error: error.message });
     }
 };
 
-
-module.exports = {
-    createProduct,
-    getAllProducts,
-    getProductById,
-    updateProduct,
-    deleteProduct,
-
-}
+module.exports = { createProduct, getAllProducts, getProductById, updateProduct, deleteProduct };

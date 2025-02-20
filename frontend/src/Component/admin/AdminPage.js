@@ -4,7 +4,7 @@ import Menu from '../menu/Menu';
 import CategoryList from './category/CategoryList';
 import ProductList from './product/ProductList';
 
-
+import './AdminPage.css';
 
 const AdminPage = () => {
   const [selectedMenu, setSelectedMenu] = useState(null);
@@ -24,14 +24,55 @@ const AdminPage = () => {
       }
   }, [selectedMenu]);
 
+  const selectCategoryList = () => {
+    setSelectedMenu('CategoryList');
+  };
+
+  const selectProductList = () => {
+    setSelectedMenu('ProductList');
+
+  };
+
   return (
-    <div className='home'>
+    <div className="admin-container">
       {/* Phần Menu */}
       <Menu />
-      <h1>Trang Chủ</h1>
-      <p>Chào mừng bạn đến với trang admin của chúng tôi!</p>
-      <CategoryList />
-      <ProductList />
+      <ul className="admin-menu">
+        <li 
+          className={selectedMenu === 'CategoryList' ? 'active' : ''} 
+          onClick={() => selectCategoryList('CategoryList')} 
+          style={{ cursor: 'pointer' }}
+        >
+            Quản lí danh mục
+        </li>
+        <li  
+          className={selectedMenu === 'ProductList' ? 'active' : ''} 
+          onClick={() => selectProductList('ProductList')} 
+          style={{ cursor: 'pointer' }}
+        >
+            Quản lí cửa hàng
+        </li>
+      </ul>
+      <div className="admin-content">
+                {selectedMenu === 'CategoryList' ? (
+                    <>
+                      <CategoryList />
+                    </>
+                ) : 
+                selectedMenu === 'ProductList' ? (
+                    <>
+                      <ProductList />
+                    </>
+                ) : (
+                    <>
+                      <h1>Trang Chủ</h1>
+                      <p>Chào mừng bạn đến với trang admin của chúng tôi!</p>
+                    </>
+                )}
+            </div>
+
+      {/* <CategoryList /> */}
+      {/* <ProductList /> */}
 
     </div>
   );

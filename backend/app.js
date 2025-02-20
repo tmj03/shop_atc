@@ -10,6 +10,8 @@ const cartRoutes = require('./routes/cart/cartRoutes');
 
 
 
+
+
 const session = require('express-session');
 
 dotenv.config();
@@ -19,6 +21,11 @@ const app = express();
 // Cấu hình middleware
 app.use(cors());
 app.use(express.json());
+
+// Cung cấp các file tĩnh từ thư mục uploads (hình ảnh)
+const uploadPath = path.join(__dirname, 'uploads');
+console.log('Serving static files from:', uploadPath);
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 
 // Cấu hình session
