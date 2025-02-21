@@ -1,0 +1,95 @@
+/* Cấu trúc chính của form */
+.category-form {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin: 20px auto;
+    transition: opacity 0.3s ease;
+}
+
+/* Tiêu đề form */
+.category-form__title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+/* Container của form khi chỉnh sửa hoặc thêm mới */
+.category-form__container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Form và các input */
+.category-form__form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Input của form */
+.category-form__input {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    outline: none;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Nút (Submit, Cancel, Add) */
+.category-form__button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.category-form__button--add {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.category-form__button--submit {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.category-form__button--cancel {
+    background-color: #f44336;
+    color: white;
+}
+
+/* Các nút khi hover */
+.category-form__button:hover {
+    opacity: 0.8;
+}
+
+/* Các hành động của form */
+.category-form__actions {
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Thông báo lỗi hoặc thành công */
+.category-form__message {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #d32f2f; /* Màu đỏ cho lỗi */
+}
+
+/* Tùy chọn khi form được mở */
+.category-form__button--cancel {
+    background-color: #f44336;
+    color: white;
+}

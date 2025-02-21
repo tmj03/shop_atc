@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createCategory, updateCategory } from '../../../services/categoryService';
+import './CategoryForm.css';
 
 const CategoryForm = ({ onCategoryUpdated, editingCategory, setEditingCategory }) => {
     const [name, setName] = useState('');
@@ -33,26 +34,39 @@ const CategoryForm = ({ onCategoryUpdated, editingCategory, setEditingCategory }
     };
 
     return (
-        <div>
+        <div className="category-form">
             {!showForm && !editingCategory ? (
-                <button onClick={() => setShowForm(true)}>➕ Thêm Mới</button>
+                <button onClick={() => setShowForm(true)} className="category-form__button category-form__button--add">
+                    ➕ Thêm Mới
+                </button>
             ) : (
-                <div>
-                    <h3>{editingCategory ? 'Sửa Danh Mục' : 'Thêm Danh Mục'}</h3>
-                    <form onSubmit={handleSubmit}>
+                <div className="category-form__container">
+                    <h3 className="category-form__title">
+                        {editingCategory ? 'Sửa Danh Mục' : 'Thêm Danh Mục'}
+                    </h3>
+                    <form onSubmit={handleSubmit} className="category-form__form">
                         <input
                             type="text"
                             placeholder="Nhập tên danh mục"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             required
+                            className="category-form__input"
                         />
-                        <button type="submit">{editingCategory ? 'Cập Nhật' : 'Lưu'}</button>
-                        <button type="button" onClick={() => { setShowForm(false); setEditingCategory(null); }}>
-                            Hủy
-                        </button>
+                        <div className="category-form__actions">
+                            <button type="submit" className="category-form__button category-form__button--submit">
+                                {editingCategory ? 'Cập Nhật' : 'Lưu'}
+                            </button>
+                            <button 
+                                type="button" 
+                                onClick={() => { setShowForm(false); setEditingCategory(null); }} 
+                                className="category-form__button category-form__button--cancel"
+                            >
+                                Hủy
+                            </button>
+                        </div>
                     </form>
-                    {message && <p>{message}</p>}
+                    {message && <p className="category-form__message">{message}</p>}
                 </div>
             )}
         </div>

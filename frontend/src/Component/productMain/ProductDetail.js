@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { getProductById } from '../../services/productService';
 import { addToCart } from '../../services/cartService';
+import './ProductDetail.css';
 
 const ProductDetail = () => {
     const { id } = useParams();
@@ -37,27 +38,33 @@ const ProductDetail = () => {
             alert("Không thể thêm vào giỏ hàng.");
         }
     };
-    
 
     if (!product) {
         return <p>Đang tải...</p>;
     }
 
     return (
-        <div>
-            <h2>{product.name}</h2>
-            <img
-                src={product.image ? `http://localhost:3000${product.image}` : '/default-image.jpg'}
-                alt={product.name}
-                width="50"
-                height="50"
-                onError={(e) => e.target.src = '/default-image.jpg'}
-            />
-            <p>Giá: {product.price} VNĐ</p>
-            <p>Mô tả: {product.description}</p>
-            <p>Số lượng: {product.quantity}</p>
-            <button onClick={() => handleAddToCart(product._id)}>Thêm vào giỏ hàng</button>
-            {message && <p>{message}</p>}
+        <div className="product-detail">
+            <h2 className="product-detail__title">{product.name}</h2>
+            <div className="product-detail__info">
+                <img
+                    src={product.image ? `http://localhost:3000${product.image}` : '/default-image.jpg'}
+                    alt={product.name}
+                    className="product-detail__image"
+                />
+                <div className="product-detail__text">
+                    <p className="product-detail__price">Giá: {product.price} VNĐ</p>
+                    <p className="product-detail__description">Mô tả: {product.description}</p>
+                    <p className="product-detail__quantity">Số lượng: {product.quantity}</p>
+                    <button
+                        className="product-detail__button"
+                        onClick={() => handleAddToCart(product._id)}
+                    >
+                        Thêm vào giỏ hàng
+                    </button>
+                    {message && <p className="product-detail__message">{message}</p>}
+                </div>
+            </div>
         </div>
     );
 };

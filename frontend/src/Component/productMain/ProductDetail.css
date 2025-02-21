@@ -1,0 +1,84 @@
+/* Cấu trúc chính của trang chi tiết sản phẩm */
+.product-detail {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    border-radius: 8px;
+}
+
+/* Tiêu đề sản phẩm */
+.product-detail__title {
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Thông tin sản phẩm */
+.product-detail__info {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Hình ảnh sản phẩm */
+.product-detail__image {
+    max-width: 400px;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Thông tin văn bản */
+.product-detail__text {
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Giá sản phẩm */
+.product-detail__price {
+    font-size: 24px;
+    font-weight: bold;
+    color: #00796b;
+}
+
+/* Mô tả sản phẩm */
+.product-detail__description {
+    font-size: 16px;
+    color: #555;
+}
+
+/* Số lượng sản phẩm */
+.product-detail__quantity {
+    font-size: 16px;
+    color: #555;
+}
+
+/* Nút Thêm vào giỏ hàng */
+.product-detail__button {
+    padding: 10px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+/* Hiệu ứng hover cho nút */
+.product-detail__button:hover {
+    background-color: #45a049;
+}
+
+/* Thông báo lỗi hoặc thành công */
+.product-detail__message {
+    font-size: 14px;
+    color: #d32f2f; /* Màu đỏ cho thông báo lỗi */
+}

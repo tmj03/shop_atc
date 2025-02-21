@@ -99,7 +99,6 @@ const ProductList = () => {
                                             className="product-list__image"
                                             src={product.image ? `http://localhost:3000${product.image}` : '/default-image.jpg'}
                                             alt={product.name}
-                                            onError={(e) => e.target.src = '/default-image.jpg'}
                                         />
                                     </td>
                                     <td>{product.description || 'Không có mô tả'}</td>
