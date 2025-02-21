@@ -27,9 +27,7 @@ export const getProductById = async (id) => {
 // Tạo sản phẩm mới
 export const createProduct = async (formData) => {
     try {
-        const response = await axios.post(API_URL, formData, {
-            headers: { 'Content-Type': 'multipart/form-data' }
-        });
+        const response = await axios.post(API_URL, formData);
         return response.data;
     } catch (error) {
         console.error('Lỗi khi thêm sản phẩm:', error);
@@ -40,9 +38,7 @@ export const createProduct = async (formData) => {
 // Cập nhật sản phẩm
 export const updateProduct = async (id, formData) => {
     try {
-        const response = await axios.put(`${API_URL}/${id}`, formData, {
-            headers: { 'Content-Type': 'multipart/form-data' }
-        });
+        const response = await axios.put(`${API_URL}/${id}`, formData);
         return response.data;
     } catch (error) {
         console.error('Lỗi khi cập nhật sản phẩm:', error);

@@ -3,7 +3,7 @@ import { createProduct, updateProduct } from '../../../services/productService';
 import { getCategories } from '../../../services/categoryService';
 import './ProductForm.css';
 
-const ProductForm = ({ product, onSuccess }) => {
+const ProductForm = ({ product, onSuccess, onClose }) => {
     const [formData, setFormData] = useState({
         name: '',
         price: '',
@@ -16,6 +16,8 @@ const ProductForm = ({ product, onSuccess }) => {
 
     const [categories, setCategories] = useState([]);
     const [selectedImage, setSelectedImage] = useState(null); // Hiển thị ảnh mới khi chọn
+    const [message, setMessage] = useState(''); // State để lưu thông báo
+    const [messageType, setMessageType] = useState(''); // State để xác định loại thông báo ('success', 'error')
 
     // Lấy danh mục sản phẩm
     useEffect(() => {
@@ -72,87 +74,119 @@ const ProductForm = ({ product, onSuccess }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const form = new FormData();
-
+   
+        // Append các trường dữ liệu
         Object.keys(formData).forEach((key) => {
-            if (key === "image" && !formData.image) return; // Không gửi ảnh nếu không chọn mới
-            if (formData[key] !== null && formData[key] !== '') {
+            if (key === "image" && !formData.image && selectedImage) {
+                form.append('image', selectedImage); // Nếu không chọn ảnh mới, gửi ảnh cũ
+            } else if (formData[key] !== null && formData[key] !== '') {
                 form.append(key, formData[key]);
             }
         });
-
+   
+        console.log(...form); // Debug: Kiểm tra dữ liệu FormData được gửi đi
+   
         try {
             if (product) {
-                await updateProduct(product._id, form);
+                // Gửi yêu cầu PUT để cập nhật sản phẩm
+                const response = await updateProduct(product._id, formData);
+                console.log(response);
             } else {
-                await createProduct(form);
-                setFormData({
-                    name: '',
-                    price: '',
-                    discount: '',
-                    quantity: '',
-                    image: null,
-                    category: '',
-                    description: ''
-                });
-                setSelectedImage(null);
+                const response = await createProduct(form);
+                console.log(response);
             }
-            onSuccess(); // Reload danh sách sản phẩm
+
+            // Hiển thị thông báo thành công
+            setMessage('Sản phẩm đã được thêm/cập nhật thành công!');
+            setMessageType('success'); // Đặt loại thông báo là thành công
+
+            // Reload danh sách sản phẩm sau khi thành công
+            onSuccess(); 
+
+            // Reset form sau khi thành công
+            setFormData({
+                name: '',
+                price: '',
+                discount: '',
+                quantity: '',
+                image: null,
+                category: '',
+                description: ''
+            });
+            setSelectedImage(null); // Reset ảnh đã chọn
+
+            // Đóng modal
+            if (onClose) {
+                onClose(); // Đóng modal
+            }
         } catch (error) {
+            // Hiển thị thông báo lỗi
+            setMessage('Đã có lỗi xảy ra, vui lòng thử lại!');
+            setMessageType('error'); // Đặt loại thông báo là lỗi
             console.error('Lỗi khi xử lý sản phẩm:', error);
         }
     };
 
     return (
-        <form className="product-form" onSubmit={handleSubmit} encType="multipart/form-data">
-            <div className="product-form__group">
-                <label className="product-form__label">Tên sản phẩm:</label>
-                <input type="text" className="product-form__input" name="name" value={formData.name} onChange={handleChange} required />
-            </div>
+        <div className="product-form-container">
+            {/* Hiển thị thông báo nếu có */}
+            {message && (
+                <div className={`product-form__message ${messageType}`}>
+                    {message}
+                </div>
+            )}
 
-            <div className="product-form__group">
-                <label className="product-form__label">Giá:</label>
-                <input type="number" className="product-form__input" name="price" value={formData.price} onChange={handleChange} required min="0" />
-            </div>
+            <form className="product-form" onSubmit={handleSubmit} encType="multipart/form-data">
+                <div className="product-form__group">
+                    <label className="product-form__label">Tên sản phẩm:</label>
+                    <input type="text" className="product-form__input" name="name" value={formData.name} onChange={handleChange} required />
+                </div>
 
-            <div className="product-form__group">
-                <label className="product-form__label">Số lượng:</label>
-                <input type="number" className="product-form__input" name="quantity" value={formData.quantity} onChange={handleChange} required min="0" />
-            </div>
+                <div className="product-form__group">
+                    <label className="product-form__label">Giá:</label>
+                    <input type="number" className="product-form__input" name="price" value={formData.price} onChange={handleChange} required min="0" />
+                </div>
 
-            <div className="product-form__group">
-                <label className="product-form__label">Giảm giá (%):</label>
-                <input type="number" className="product-form__input" name="discount" value={formData.discount} onChange={handleChange} min="0" />
-            </div>
+                <div className="product-form__group">
+                    <label className="product-form__label">Số lượng:</label>
+                    <input type="number" className="product-form__input" name="quantity" value={formData.quantity} onChange={handleChange} required min="0" />
+                </div>
 
-            <div className="product-form__group">
-                <label className="product-form__label">Ảnh sản phẩm:</label>
-                <input type="file" className="product-form__input" accept="image/*" onChange={handleFileChange} />
-                {selectedImage && (
-                    <div className="product-form__preview">
-                        <img src={selectedImage} alt="Ảnh sản phẩm" width={50}/>
-                    </div>
-                )}
-            </div>
+                <div className="product-form__group">
+                    <label className="product-form__label">Giảm giá (%):</label>
+                    <input type="number" className="product-form__input" name="discount" value={formData.discount} onChange={handleChange} min="0" />
+                </div>
 
-            <div className="product-form__group">
-                <label className="product-form__label">Danh mục:</label>
-                <select className="product-form__select" name="category" value={formData.category} onChange={handleChange} required>
-                    <option value="">Chọn danh mục</option>
-                    {categories.map((cat) => (
-                        <option key={cat._id} value={cat._id}>{cat.name}</option>
-                    ))}
-                </select>
-            </div>
+                <div className="product-form__group">
+                    <label className="product-form__label">Ảnh sản phẩm:</label>
+                    <input type="file" className="product-form__input" accept="image/*" onChange={handleFileChange} />
+                    {selectedImage && (
+                        <div className="product-form__preview">
+                            <img src={selectedImage} alt="Ảnh sản phẩm" width={50}/>
+                        </div>
+                    )}
+                </div>
 
-            <div className="product-form__group">
-                <label className="product-form__label">Mô tả sản phẩm:</label>
-                <textarea className="product-form__textarea" name="description" value={formData.description} onChange={handleChange} rows="4" required />
-            </div>
+                <div className="product-form__group">
+                    <label className="product-form__label">Danh mục:</label>
+                    <select className="product-form__select" name="category" value={formData.category} onChange={handleChange} required>
+                        <option value="">Chọn danh mục</option>
+                        {categories.map((cat) => (
+                            <option key={cat._id} value={cat._id}>{cat.name}</option>
+                        ))}
+                    </select>
+                </div>
 
-            <button type="submit" className="product-form__button">
-                {product ? 'Cập nhật' : 'Thêm mới'}
-            </button>
-        </form>
+                <div className="product-form__group">
+                    <label className="product-form__label">Mô tả sản phẩm:</label>
+                    <textarea className="product-form__textarea" name="description" value={formData.description} onChange={handleChange} rows="4" required />
+                </div>
+
+                <button type="submit" className="product-form__button">
+                    {product ? 'Cập nhật' : 'Thêm mới'}
+                </button>
+            </form>
+        </div>
     );
 };
 

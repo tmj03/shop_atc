@@ -1,6 +1,24 @@
 const productService = require('../../services/product/productService');
 const upload = require('../../middleware/upload');
+const fs = require('fs');
+const path = require('path');
 
+// Hàm kiểm tra dữ liệu sản phẩm
+const validateProductData = (data) => {
+    const { name, price, quantity, description, category } = data;
+    if (!name || !price || !quantity || !description || !category) {
+        return 'Thiếu dữ liệu bắt buộc';
+    }
+    if (isNaN(price) || price <= 0) {
+        return 'Giá sản phẩm phải là một số dương';
+    }
+    if (isNaN(quantity) || quantity < 0) {
+        return 'Số lượng phải là một số nguyên không âm';
+    }
+    return null;
+};
+
+// Tạo sản phẩm
 const createProduct = async (req, res) => {
     upload.single('image')(req, res, async (err) => {
         if (err) {
@@ -20,6 +38,7 @@ const createProduct = async (req, res) => {
     });
 };
 
+// Lấy tất cả sản phẩm
 const getAllProducts = async (req, res) => {
     try {
         const products = await productService.getAllProducts();
@@ -29,17 +48,61 @@ const getAllProducts = async (req, res) => {
     }
 };
 
+// Cập nhật sản phẩm
 const updateProduct = async (req, res) => {
+    const { id } = req.params;
+
+    console.log('Dữ liệu yêu cầu:', req.body);  // Kiểm tra dữ liệu gửi lên
+    console.log('File hình ảnh:', req.file);  // Kiểm tra hình ảnh gửi lên
+
+    // Kiểm tra dữ liệu đầu vào
+    const errorMessage = validateProductData(req.body);
+    if (errorMessage) {
+        console.log('Lỗi dữ liệu:', errorMessage); // In lỗi nếu có
+        return res.status(400).json({ message: errorMessage });
+    }
+
     try {
-        const product = await productService.updateProduct(req.params.id, req.body);
-        res.status(200).json({ message: 'Cập nhật sản phẩm thành công', product });
+        // Kiểm tra nếu sản phẩm tồn tại
+        const existingProduct = await productService.getProductById(id);
+        if (!existingProduct) {
+            return res.status(404).json({ message: 'Sản phẩm không tìm thấy' });
+        }
+
+        // Giữ lại hình ảnh cũ nếu không có hình ảnh mới
+        let image = existingProduct.image;
+        if (req.file) {
+            // Nếu có hình ảnh mới, thay thế hình ảnh cũ
+            image = `/uploads/images/${req.file.filename}`;
+
+            // Xóa hình ảnh cũ nếu có
+            const oldImagePath = path.join(__dirname, '..', '..', 'public', existingProduct.image);
+            if (fs.existsSync(oldImagePath)) {
+                fs.unlinkSync(oldImagePath); // Xóa tệp hình ảnh cũ
+            }
+        }
+
+        const updatedProduct = await productService.updateProduct(id, { ...req.body, image });
+        res.status(200).json({ message: 'Cập nhật sản phẩm thành công', product: updatedProduct });
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        console.error('Lỗi khi cập nhật sản phẩm:', error.message); // In lỗi chi tiết
+        res.status(500).json({ error: error.message });
     }
 };
 
+
+// Xóa sản phẩm
 const deleteProduct = async (req, res) => {
     try {
+        const product = await productService.getProductById(req.params.id);
+        if (product && product.image) {
+            // Xóa hình ảnh khi xóa sản phẩm
+            const imagePath = path.join(__dirname, '..', '..', 'public', product.image);
+            if (fs.existsSync(imagePath)) {
+                fs.unlinkSync(imagePath); // Xóa tệp hình ảnh
+            }
+        }
+
         await productService.deleteProduct(req.params.id);
         res.status(200).json({ message: 'Xóa sản phẩm thành công' });
     } catch (error) {
@@ -47,6 +110,7 @@ const deleteProduct = async (req, res) => {
     }
 };
 
+// Lấy sản phẩm theo ID
 const getProductById = async (req, res) => {
     try {
         const { id } = req.params;

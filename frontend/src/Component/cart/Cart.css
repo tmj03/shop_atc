@@ -1,0 +1,130 @@
+/* Cấu trúc chung của giỏ hàng */
+.cart {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.cart__title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.cart__empty {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #777;
+}
+
+.cart__login-prompt {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+.cart__list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Item trong giỏ hàng */
+.cart__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  margin: 10px 0;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.cart__item-image {
+  width: 80px;
+  height: 80px;
+  margin-right: 15px;
+}
+
+.cart__item-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.cart__item-details {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.cart__item-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.cart__item-quantity {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.cart__item-actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* Nút Thêm và Xóa */
+.cart__button {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.cart__button--add {
+  background-color: #4CAF50;
+  color: #fff;
+}
+
+.cart__button--add:hover {
+  background-color: #45a049;
+}
+
+.cart__button--remove {
+  background-color: #e74c3c;
+  color: #fff;
+}
+
+.cart__button--remove:hover {
+  background-color: #c0392b;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .cart__item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .cart__item-image {
+    width: 100px;
+    height: 100px;
+  }
+
+  .cart__item-actions {
+    align-self: flex-end;
+  }
+}

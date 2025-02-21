@@ -6,6 +6,7 @@ import SignUp from './Component/auth/SignUp';
 import AdminPage from './Component/admin/AdminPage';
 import PrivateRoute from './Component/admin/PrivateRoute';
 import ProductDetail from './Component/productMain/ProductDetail';
+import Cart from './Component/cart/Cart';
 
 const App = () => {
   return (
@@ -19,6 +20,9 @@ const App = () => {
 
         {/* Route cho ProductDetail */}
         <Route path="/Product/:id" element={<ProductDetail />} />
+
+        {/* Route cho Cart */}
+        <Route path="/Cart" element={<Cart />} />
 
 
         {/* Route cho Đăng Nhập */}

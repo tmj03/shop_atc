@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Menu from './menu/Menu';
 import ProductMain from './productMain/ProductMain';
-import Cart from './cart/Cart';
+import './Home.css';
+import HeaderSection from './headerSection/HeaderSection';
+
 
 
 const Home = () => {
@@ -17,12 +19,9 @@ const Home = () => {
 
   return (
     <div className='home'>
-      {/* Phần Menu */}
       <Menu />
-      <h1>Trang Chủ</h1>
-      <p>Chào mừng bạn đến với trang web của chúng tôi!</p>
+      <HeaderSection />
       <ProductMain />
-      <Cart token={token} />
       
     </div>
   );
