@@ -1,26 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { getCart, addToCart, removeFromCart } from "../../services/cartService";
-import './Cart.css'; // Nhớ import CSS
+import Checkout from "./Checkout";
+import "./Cart.css";
 
 const Cart = () => {
-  const [cartItems, setCartItems] = useState([]);
+  const [cartItems, setCartItems] = useState([]); // Đảm bảo cartItems là mảng, mặc định là mảng rỗng
+  const [totalAmount, setTotalAmount] = useState(0);
+  const [showCheckout, setShowCheckout] = useState(false);
   const token = localStorage.getItem("token");
 
   useEffect(() => {
     if (token) {
       fetchCart();
-    } else {
-      console.warn("⚠ Người dùng chưa đăng nhập. Không thể lấy giỏ hàng.");
     }
   }, [token]);
 
   const fetchCart = async () => {
     try {
-      const items = await getCart(); // Lấy giỏ hàng từ API
-      console.log('Items from API:', items);  // In dữ liệu trả về từ API để kiểm tra
-      setCartItems(items);
+      const data = await getCart(); // Giả sử API trả về một đối tượng có cấu trúc bạn đã cung cấp
+      console.log("Dữ liệu giỏ hàng nhận được từ API:", data);
+      setCartItems(data.items || []); // Kiểm tra và gán mảng rỗng nếu không có items
+      setTotalAmount(data.totalAmount || 0); // Kiểm tra và gán 0 nếu không có totalAmount
     } catch (error) {
-      console.error('Lỗi khi lấy giỏ hàng:', error);
+      console.error("Lỗi khi lấy giỏ hàng:", error);
     }
   };
 
@@ -29,10 +31,9 @@ const Cart = () => {
       alert("Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng!");
       return;
     }
-
     try {
       await addToCart(productId);
-      fetchCart();
+      fetchCart(); // Cập nhật lại giỏ hàng sau khi thêm sản phẩm
     } catch (error) {
       alert("Không thể thêm vào giỏ hàng.");
     }
@@ -43,10 +44,9 @@ const Cart = () => {
       alert("Bạn cần đăng nhập để xóa sản phẩm khỏi giỏ hàng!");
       return;
     }
-
     try {
       await removeFromCart(productId);
-      fetchCart();
+      fetchCart(); // Cập nhật lại giỏ hàng sau khi xóa sản phẩm
     } catch (error) {
       alert("Không thể xóa sản phẩm khỏi giỏ hàng.");
     }
@@ -56,49 +56,44 @@ const Cart = () => {
     <div className="cart">
       <h2 className="cart__title">🛒 Giỏ Hàng</h2>
       {token ? (
-        cartItems.length === 0 ? (
+        cartItems.length === 0 ? ( // Kiểm tra xem có sản phẩm trong giỏ không
           <p className="cart__empty">Giỏ hàng trống</p>
         ) : (
-          <ul className="cart__list">
-            {cartItems.map((item) => {
-              console.log('Item Image:', item.image);  // Kiểm tra giá trị của trường ảnh
-              return (
+          <>
+            <ul className="cart__list">
+              {cartItems.map((item) => (
                 <li key={item.productId} className="cart__item">
                   <div className="cart__item-image">
                     <img
-                      src={item.image ? `http://localhost:3000${item.image}` : '/default-image.jpg'}
+                      src={item.image ? `http://localhost:3000${item.image}` : "/default-image.jpg"}
                       alt={item.name}
-                      className="product-detail__image"
                     />
                   </div>
                   <div className="cart__item-details">
                     <span className="cart__item-name">{item.name}</span>
                     <span className="cart__item-quantity">
-                      {item.quantity} x {item.price}$
+                      {item.quantity} x {item.price}$ = {item.quantity * item.price}$
                     </span>
                   </div>
                   <div className="cart__item-actions">
-                    <button
-                      className="cart__button cart__button--add"
-                      onClick={() => handleAddToCart(item.productId)}
-                    >
-                      Thêm
-                    </button>
-                    <button
-                      className="cart__button cart__button--remove"
-                      onClick={() => handleRemoveFromCart(item.productId)}
-                    >
-                      Xóa
-                    </button>
+                    <button onClick={() => handleAddToCart(item.productId)}>Thêm</button>
+                    <button onClick={() => handleRemoveFromCart(item.productId)}>Xóa</button>
                   </div>
                 </li>
-              );
-            })}
-          </ul>
+              ))}
+            </ul>
+            <div className="cart__total">
+              <h3>Tổng tiền: <span>{totalAmount}$</span></h3> {/* Hiển thị tổng tiền */}
+            </div>
+            <button className="cart__checkout-button" onClick={() => setShowCheckout(true)}>
+              Mua hàng
+            </button>
+          </>
         )
       ) : (
         <p className="cart__login-prompt">⚠ Bạn cần đăng nhập để xem giỏ hàng.</p>
       )}
+      {showCheckout && <Checkout cartItems={cartItems} />}
     </div>
   );
 };
