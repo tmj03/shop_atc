@@ -76,7 +76,7 @@ const updateProduct = async (req, res) => {
             image = `/uploads/images/${req.file.filename}`;
 
             // Xóa hình ảnh cũ nếu có
-            const oldImagePath = path.join(__dirname, '..', '..', 'public', existingProduct.image);
+            const oldImagePath = path.join(__dirname, '..', '..', '..', existingProduct.image);
             if (fs.existsSync(oldImagePath)) {
                 fs.unlinkSync(oldImagePath); // Xóa tệp hình ảnh cũ
             }
@@ -97,7 +97,7 @@ const deleteProduct = async (req, res) => {
         const product = await productService.getProductById(req.params.id);
         if (product && product.image) {
             // Xóa hình ảnh khi xóa sản phẩm
-            const imagePath = path.join(__dirname, '..', '..', 'public', product.image);
+            const imagePath = path.join(__dirname, '..', '..', '..', product.image);
             if (fs.existsSync(imagePath)) {
                 fs.unlinkSync(imagePath); // Xóa tệp hình ảnh
             }
