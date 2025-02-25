@@ -38,3 +38,18 @@ exports.updateOrderStatus = async (req, res) => {
         res.status(400).json({ message: error.message });
     }
 };
+
+
+
+exports.getOrderById = async (req, res) => {
+    try {
+        const { orderId } = req.params;
+        const order = await orderService.getOrderById(orderId);
+        if (!order) {
+            return res.status(404).json({ message: "Không tìm thấy đơn hàng!" });
+        }
+        res.json(order);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};

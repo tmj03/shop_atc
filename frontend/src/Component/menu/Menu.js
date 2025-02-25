@@ -16,24 +16,25 @@ const Menu = () => {
   }, []);
 
   const handleLogout = () => {
-    // Xóa thông tin user khỏi localStorage
-    localStorage.removeItem('user');
+    localStorage.removeItem("user");  // Xóa thông tin user
+    localStorage.removeItem("token"); // Xóa token để ngăn truy cập API
     setUser(null);
-    navigate('/login'); // Chuyển hướng về trang login
+    navigate("/login"); // Chuyển hướng về trang đăng nhập
   };
 
+
   return (
-    <div className='menu-main'>
+    <div className="menu-main">
       {user ? (
-        <div>
-          <p>Chào mừng, {user.username}!</p>
-          <button onClick={handleLogout}>Đăng Xuất</button>
+        <div className="menu-main__user-info">
+          <p className="menu-main__welcome-message">Chào mừng, {user.username}!</p>
+          <button className="menu-main__logout-button" onClick={handleLogout}>Đăng Xuất</button>
         </div>
       ) : (
-        <div>
-          <Link to="/login">Đăng Nhập</Link>
+        <div className="menu-main__auth-links">
+          <Link className="menu-main__link" to="/login">Đăng Nhập</Link>
           <br />
-          <Link to="/signup">Đăng Ký</Link>
+          <Link className="menu-main__link" to="/signup">Đăng Ký</Link>
         </div>
       )}
     </div>

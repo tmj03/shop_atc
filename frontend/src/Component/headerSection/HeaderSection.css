@@ -1,0 +1,71 @@
+/* Block */
+.header-section {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 20px;
+    padding: 10px 20px;
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Element */
+  .header-section__button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 30px; /* Bo góc tròn như Shopee */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+    min-width: 120px;
+    justify-content: center;
+    text-align: center;
+    height: 40px;
+  }
+  
+  .header-section__button--cart {
+    background-color: #f57c00; /* Màu cam của Shopee */
+    color: white;
+    border: 1px solid #f57c00;
+  }
+  
+  .header-section__button--orders {
+    background-color: #4caf50; /* Màu xanh lá Shopee */
+    color: white;
+    border: 1px solid #4caf50;
+  }
+  
+  /* Modifier - Hover Effects */
+  .header-section__button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .header-section__button--cart:hover {
+    background-color: #ff6f00; /* Màu cam đậm khi hover */
+    border-color: #ff6f00;
+  }
+  
+  .header-section__button--orders:hover {
+    background-color: #388e3c; /* Màu xanh lá đậm khi hover */
+    border-color: #388e3c;
+  }
+  
+  /* Disabled state */
+  .header-section__button:disabled {
+    background-color: #ddd;
+    cursor: not-allowed;
+    border-color: #ddd;
+    color: #888;
+  }
+  
+  .header-section__button .material-icons {
+    margin-right: 5px; /* Căn chỉnh icon với chữ */
+    font-size: 20px;
+  }
+  

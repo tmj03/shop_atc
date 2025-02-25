@@ -7,6 +7,8 @@ import AdminPage from './Component/admin/AdminPage';
 import PrivateRoute from './Component/admin/PrivateRoute';
 import ProductDetail from './Component/productMain/ProductDetail';
 import Cart from './Component/cart/Cart';
+import OrderList from './Component/orders/OrderList';
+import AdminOrderDetail from './Component/admin/order/AdminOrderDetail';
 
 const App = () => {
   return (
@@ -24,6 +26,10 @@ const App = () => {
         {/* Route cho Cart */}
         <Route path="/Cart" element={<Cart />} />
 
+        {/* Route cho orders */}
+        <Route path="/orders" element={<OrderList />} />
+
+        <Route path="/orders/:orderId" element={<PrivateRoute requiredRole="admin"><AdminOrderDetail /></PrivateRoute>} />
 
         {/* Route cho Đăng Nhập */}
         <Route path="/login" element={<Login />} />

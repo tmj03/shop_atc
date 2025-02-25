@@ -39,4 +39,8 @@ const updateOrderStatus = async (orderId, status) => {
     return await Order.findByIdAndUpdate(orderId, { status }, { new: true });
 };
 
-module.exports = { placeOrder, getOrdersByUser, getAllOrders, updateOrderStatus };
+const getOrderById = async (orderId) => {
+    return await Order.findById(orderId).populate("items.productId userId");
+};
+
+module.exports = { placeOrder, getOrdersByUser, getAllOrders, updateOrderStatus, getOrderById };

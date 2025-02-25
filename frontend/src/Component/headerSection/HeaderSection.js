@@ -1,32 +1,49 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getCart } from '../../services/cartService'; // Giả sử bạn có API để lấy giỏ hàng
+import { getCart } from '../../services/cartService'; // API lấy giỏ hàng
+import { getOrdersByUser } from '../../services/orderService'; // API lấy đơn hàng
+import './HeaderSection.css';
 
 const HeaderSection = () => {
   const [token, setToken] = useState(null);
-  const [cartItemCount, setCartItemCount] = useState(0); // Lưu số lượng sản phẩm trong giỏ
+  const [cartItemCount, setCartItemCount] = useState(0);
+  const [orderCount, setOrderCount] = useState(0); // Lưu số lượng đơn hàng
   const navigate = useNavigate();
 
   useEffect(() => {
-      const storedToken = localStorage.getItem("token");
-      if (storedToken) {
-          setToken(storedToken);
-          fetchCart(); // Lấy thông tin giỏ hàng khi có token
-      }
+    const storedToken = localStorage.getItem("token");
+    if (storedToken) {
+      setToken(storedToken);
+      fetchCart(); // Lấy giỏ hàng
+      fetchOrders(); // Lấy số lượng đơn hàng
+    }
   }, [token]);
 
+  // Lấy thông tin giỏ hàng
   const fetchCart = async () => {
     if (token) {
       try {
-        const cartItems = await getCart(); // Giả sử API trả về danh sách sản phẩm trong giỏ
-        if (cartItems && Array.isArray(cartItems)) {
-          const totalItems = cartItems.reduce((total, item) => total + (item.quantity || 0), 0); // Tính tổng số sản phẩm
-          setCartItemCount(totalItems); // Cập nhật số lượng sản phẩm
-        } else {
-          console.error("Dữ liệu giỏ hàng không hợp lệ:", cartItems);
+        const data = await getCart();
+        if (data && Array.isArray(data.items)) {
+          const totalItems = data.items.reduce((total, item) => total + (item.quantity || 0), 0);
+          setCartItemCount(totalItems);
         }
       } catch (error) {
         console.error("Lỗi khi lấy giỏ hàng:", error);
+      }
+    }
+  };
+
+  // Lấy danh sách đơn hàng
+  const fetchOrders = async () => {
+    if (token) {
+      try {
+        const orders = await getOrdersByUser(); // Gọi API lấy danh sách đơn hàng
+        if (Array.isArray(orders)) {
+          setOrderCount(orders.length); // Cập nhật số lượng đơn hàng
+        }
+      } catch (error) {
+        console.error("Lỗi khi lấy đơn hàng:", error);
       }
     }
   };
@@ -36,13 +53,20 @@ const HeaderSection = () => {
       alert("Bạn cần đăng nhập để xem giỏ hàng.");
       return;
     }
-    navigate('/cart'); // Chuyển đến trang giỏ hàng
+    navigate('/cart');
+  };
+
+  const goToOrders = () => {
+    navigate("/orders");
   };
 
   return (
-    <div className='HeaderSection'>
-      <button onClick={handleGoToCart}>
-        Giỏ hàng ({cartItemCount}) {/* Hiển thị số lượng sản phẩm */}
+    <div className="header-section">
+      <button className="header-section__button header-section__button--cart" onClick={handleGoToCart}>
+        🛒 Giỏ hàng ({cartItemCount})
+      </button>
+      <button className="header-section__button header-section__button--orders" onClick={goToOrders}>
+        📦 Đơn hàng ({orderCount})
       </button>
     </div>
   );
