@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { getAllOrders, updateOrderStatus } from "../../../services/orderService";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const AdminOrderList = () => {
   const [orders, setOrders] = useState([]);
@@ -10,7 +12,7 @@ const AdminOrderList = () => {
 
   useEffect(() => {
     if (!token) {
-      alert("Bạn cần đăng nhập!");
+      toast.warning("Bạn cần đăng nhập!", { position: "top-center" });
       navigate("/login");
       return;
     }
@@ -21,6 +23,7 @@ const AdminOrderList = () => {
         setOrders(data);
       } catch (error) {
         console.error("Lỗi khi tải danh sách đơn hàng:", error);
+        toast.error("Không thể tải danh sách đơn hàng!", { position: "top-right" });
       } finally {
         setLoading(false);
       }
@@ -37,10 +40,10 @@ const AdminOrderList = () => {
           order._id === orderId ? { ...order, status: newStatus } : order
         )
       );
-      alert("Cập nhật trạng thái thành công!");
+      toast.success("Cập nhật trạng thái thành công!", { position: "top-right" });
     } catch (error) {
       console.error("Lỗi khi cập nhật trạng thái:", error);
-      alert("Cập nhật thất bại!");
+      toast.error("Cập nhật thất bại!", { position: "top-right" });
     }
   };
 

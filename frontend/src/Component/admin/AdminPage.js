@@ -4,6 +4,8 @@ import Menu from '../menu/Menu';
 import CategoryList from './category/CategoryList';
 import ProductList from './product/ProductList';
 import AdminOrderList from './order/AdminOrderList';
+import RevenuePage from './revenue/RevenuePage';
+import { ToastContainer } from "react-toastify";
 
 import './AdminPage.css';
 
@@ -56,9 +58,14 @@ const AdminPage = () => {
     setSelectedMenu('AdminOrderList');
 
   };
+  const selectRevenuePage = () => {
+    setSelectedMenu('RevenuePage');
+
+  };
 
   return (
     <div className="admin-container">
+      <ToastContainer />
       {/* Phần Menu */}
       {/* <Menu /> */}
       <ul className="admin-menu">
@@ -87,6 +94,13 @@ const AdminPage = () => {
         >
             Quản lí đơn hàng
         </li>
+        <li  
+          className={selectedMenu === 'RevenuePage' ? 'active' : ''} 
+          onClick={() => selectRevenuePage('RevenuePage')} 
+          style={{ cursor: 'pointer' }}
+        >
+            Quản lí doanh thu
+        </li>
         <li onClick={handleLogout}>
           Đăng Xuất
         </li>
@@ -105,6 +119,11 @@ const AdminPage = () => {
                 selectedMenu === 'AdminOrderList' ? (
                   <>
                     <AdminOrderList />
+                  </>
+                ) : 
+                selectedMenu === 'RevenuePage' ? (
+                  <>
+                    <RevenuePage />
                   </>
                 ) : (
                     <>
