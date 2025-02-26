@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getOrderById } from "../../../services/orderService";
+import "./AdminOrderDetail.css";
 
 const AdminOrderDetail = () => {
   const { orderId } = useParams();
@@ -21,20 +22,22 @@ const AdminOrderDetail = () => {
   }, [orderId]);
 
   if (!order) {
-    return <p>Đang tải chi tiết đơn hàng...</p>;
+    return <p className="order-detail__loading">Đang tải chi tiết đơn hàng...</p>;
   }
 
   return (
-    <div>
-      <h2>Chi tiết đơn hàng</h2>
-      <p><strong>Mã đơn hàng:</strong> {order._id}</p>
-      <p><strong>Người đặt:</strong> {order.userId?.username || "Khách"}</p>
-      <p><strong>Ngày đặt:</strong> {new Date(order.createdAt).toLocaleString()}</p>
-      <p><strong>Tổng tiền:</strong> {order.totalPrice.toLocaleString()} đ</p>
-      <p><strong>Trạng thái:</strong> {order.status || "Chờ xử lý"}</p>
+    <div className="order-detail">
+      <h2 className="order-detail__title">Chi tiết đơn hàng</h2>
+      <div className="order-detail__info">
+        <p><strong>Mã đơn hàng:</strong> {order._id}</p>
+        <p><strong>Người đặt:</strong> {order.userId?.username || "Khách"}</p>
+        <p><strong>Ngày đặt:</strong> {new Date(order.createdAt).toLocaleString()}</p>
+        <p><strong>Tổng tiền:</strong> {order.totalPrice.toLocaleString()} đ</p>
+        <p><strong>Trạng thái:</strong> {order.status || "Chờ xử lý"}</p>
+      </div>
 
-      <h3>Sản phẩm trong đơn</h3>
-      <table border="1">
+      <h3 className="order-detail__subtitle">Sản phẩm trong đơn</h3>
+      <table className="order-detail__table">
         <thead>
           <tr>
             <th>Sản phẩm</th>
@@ -45,7 +48,7 @@ const AdminOrderDetail = () => {
         </thead>
         <tbody>
           {order.items.map((item) => (
-            <tr key={item.productId._id}>
+            <tr key={item.productId._id} className="order-detail__item">
               <td>{item.productId.name}</td>
               <td>{item.quantity}</td>
               <td>{item.productId.price.toLocaleString()} đ</td>

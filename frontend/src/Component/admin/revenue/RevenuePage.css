@@ -1,0 +1,175 @@
+/* ======= Tổng quan ======= */
+.revenue-page {
+    /* max-width: 1000px; */
+    margin: 40px auto;
+    padding: 25px;
+    background: #fff;
+    border-radius: 12px;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .revenue-page:hover {
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* ======= Tiêu đề ======= */
+  .revenue-page__title {
+    font-size: 26px;
+    font-weight: bold;
+    text-align: center;
+    color: #007bff;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 10px;
+  }
+  
+  .revenue-page__subtitle {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 15px;
+  }
+  
+  /* ======= Khi không có đơn hàng ======= */
+  .revenue-page__no-orders {
+    text-align: center;
+    font-size: 18px;
+    color: #999;
+  }
+  
+  /* ======= Bảng đơn hàng ======= */
+  .revenue-page__table-wrapper {
+    overflow-x: auto;
+  }
+  
+  .revenue-page__table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  
+  .revenue-page__table th,
+  .revenue-page__table td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #ddd;
+  }
+  
+  .revenue-page__table th {
+    background: #007bff;
+    color: white;
+    font-weight: bold;
+  }
+  
+  .revenue-page__table tbody tr:nth-child(even) {
+    background: #f9f9f9;
+  }
+  
+  .revenue-page__table tbody tr:hover {
+    background: #eef5ff;
+    transition: 0.2s;
+  }
+  
+  .revenue-page__total-price {
+    font-weight: bold;
+    color: #d9534f;
+  }
+  
+  /* ======= Danh sách sản phẩm trong bảng ======= */
+  .revenue-page__product-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .revenue-page__product-list li {
+    font-size: 14px;
+    padding: 2px 0;
+  }
+  
+  /* Biểu đồ */
+.revenue-page__chart {
+  margin-top: 40px;
+  text-align: center;
+}
+
+.revenue-page__chart h3 {
+  font-size: 1.5rem;
+  color: #007bff;
+  margin-bottom: 20px;
+}
+
+.revenue-page__no-orders {
+  font-size: 1.2rem;
+  color: #dc3545;
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+  text-align: center;
+  font-size: 1.5rem;
+  color: #007bff;
+  margin-top: 50px;
+}
+
+.loading-spinner::before {
+  content: "⏳";
+  animation: spin 1s infinite linear;
+  font-size: 3rem;
+  margin-right: 10px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Nút filter */
+.revenue-page button {
+  padding: 10px 20px;
+  margin: 10px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.revenue-page button:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+.revenue-page button:active {
+  background-color: #004085;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .revenue-page__title {
+      font-size: 1.8rem;
+  }
+
+  .revenue-page__subtitle {
+      font-size: 1.3rem;
+  }
+
+  .revenue-page__total-revenue h4 {
+      font-size: 1rem;
+  }
+
+  .revenue-page__table {
+      font-size: 0.9rem;
+  }
+
+  .revenue-page__table th, .revenue-page__table td {
+      padding: 8px;
+  }
+
+  .revenue-page__chart h3 {
+      font-size: 1.3rem;
+  }
+}
+  

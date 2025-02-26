@@ -20,7 +20,13 @@ body {
     list-style: none;
     padding: 0;
     margin: 0;
+    position: fixed;
+    z-index: 1;
     width: 16%;
+    background-color: #000;
+    top: 0;
+    left: 0;
+    bottom: 0;
 }
 
 .admin-menu li {
@@ -51,7 +57,7 @@ body {
 
 /* Content area styles */
 .admin-content {
-    padding: 40px;
+    padding: 40px 40px 40px 18%;
     width: 84%;
     flex-grow: 1;
     background-color: #f4f6f9;

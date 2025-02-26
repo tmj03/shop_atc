@@ -25,9 +25,12 @@ const Menu = () => {
 
   return (
     <div className="menu-main">
+      <div>
+        Shop Trung
+      </div>
       {user ? (
         <div className="menu-main__user-info">
-          <p className="menu-main__welcome-message">Chào mừng, {user.username}!</p>
+          <p className="menu-main__welcome-message">{user.username}</p>
           <button className="menu-main__logout-button" onClick={handleLogout}>Đăng Xuất</button>
         </div>
       ) : (

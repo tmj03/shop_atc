@@ -3,6 +3,7 @@ import { getAllOrders, updateOrderStatus } from "../../../services/orderService"
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import "./AdminOrderList.css"; // Import CSS
 
 const AdminOrderList = () => {
   const [orders, setOrders] = useState([]);
@@ -51,14 +52,14 @@ const AdminOrderList = () => {
     navigate(`/orders/${orderId}`);
   };
 
-  if (loading) return <p>Đang tải...</p>;
+  if (loading) return <p className="order-list__loading">Đang tải...</p>;
 
   return (
-    <div className="container">
-      <h2>📦 Quản lý Đơn Hàng</h2>
-      <table className="table table-bordered">
+    <div className="order-list">
+      <h2 className="order-list__title">📦 Quản lý Đơn Hàng</h2>
+      <table className="order-list__table">
         <thead>
-          <tr>
+          <tr className="order-list__table-header">
             <th>#</th>
             <th>Người đặt</th>
             <th>Số điện thoại</th>
@@ -72,31 +73,21 @@ const AdminOrderList = () => {
         </thead>
         <tbody>
           {orders.map((order, index) => (
-            <tr key={order._id}>
+            <tr key={order._id} className="order-list__table-row">
               <td>{index + 1}</td>
               <td>{order.fullName}</td>
               <td>{order.phone}</td>
               <td>{order.address}</td>
               <td>
                 {order.items.map((item) => (
-                  <p key={item.productId._id}>
+                  <p key={item.productId._id} className="order-list__product">
                     {item.productId.name} - {item.quantity}x
                   </p>
                 ))}
               </td>
               <td>{order.totalPrice} VND</td>
               <td>
-                <span
-                  className={`badge ${
-                    order.status === "pending"
-                      ? "bg-warning"
-                      : order.status === "shipped"
-                      ? "bg-info"
-                      : order.status === "delivered"
-                      ? "bg-success"
-                      : "bg-secondary"
-                  }`}
-                >
+                <span className={`order-list__status order-list__status--${order.status}`}>
                   {order.status}
                 </span>
               </td>
@@ -104,7 +95,7 @@ const AdminOrderList = () => {
                 <select
                   value={order.status}
                   onChange={(e) => handleStatusChange(order._id, e.target.value)}
-                  className="form-select"
+                  className="order-list__select"
                 >
                   <option value="pending">Chờ xử lý</option>
                   <option value="shipped">Đang giao</option>
@@ -112,7 +103,12 @@ const AdminOrderList = () => {
                 </select>
               </td>
               <td>
-                <button onClick={() => handleViewOrder(order._id)}>👀 Xem chi tiết</button>
+                <button
+                  onClick={() => handleViewOrder(order._id)}
+                  className="order-list__button"
+                >
+                  👀 Xem chi tiết
+                </button>
               </td>
             </tr>
           ))}
