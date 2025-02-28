@@ -4,7 +4,7 @@ import Menu from './menu/Menu';
 import ProductMain from './productMain/ProductMain';
 import './Home.css';
 import HeaderSection from './headerSection/HeaderSection';
-
+import Carousel from './slide/Carousel'; 
 
 
 const Home = () => {
@@ -21,6 +21,7 @@ const Home = () => {
     <div className='home'>
       <Menu />
       <HeaderSection />
+      <Carousel />
       <ProductMain />
       
     </div>
