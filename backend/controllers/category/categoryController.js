@@ -40,13 +40,16 @@ const updateCategory = async (req, res) => {
 
 const deleteCategory = async (req, res) => {
     try {
-        const deletedCategory = await categoryService.deleteCategory(req.params.id);
-        if (!deletedCategory) return res.status(404).json({ message: 'Không tìm thấy loại sản phẩm' });
-        res.json({ message: 'Loại sản phẩm đã bị xóa' });
+      const categoryId = req.params.id;
+  
+      // Gọi service để xóa danh mục và các sản phẩm liên quan
+      await categoryService.deleteCategory(categoryId);
+  
+      res.status(200).json({ message: 'Danh mục và sản phẩm đã được xóa thành công!' });
     } catch (error) {
-        res.status(500).json({ message: 'Lỗi khi xóa loại sản phẩm' });
+      res.status(500).json({ message: 'Có lỗi xảy ra khi xóa danh mục', error: error.message });
     }
-};
+  };
 
 module.exports = {
     getAllCategories,

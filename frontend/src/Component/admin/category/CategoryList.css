@@ -1,24 +1,25 @@
-/* Store Management Form Styles */
+/* CategoryList.css */
 .category-list {
-    max-width: 800px;
+    font-family: 'Roboto', sans-serif;
+    background-color: #f4f6f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 900px;
     margin: 30px auto;
-    padding: 25px;
-    background: #f9f9f9;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    font-family: Arial, sans-serif;
+    transition: all 0.3s ease;
 }
 
 .category-list__title {
-    font-size: 26px;
+    font-size: 24px;
+    font-weight: 600;
     color: #333;
     margin-bottom: 20px;
-    font-weight: bold;
+    text-align: center;
 }
 
 .category-list__items {
-    list-style: none;
+    list-style-type: none;
     padding: 0;
 }
 
@@ -26,65 +27,162 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 18px;
-    background: #ffffff;
+    background-color: #fff;
+    padding: 12px 20px;
+    margin: 8px 0;
     border-radius: 8px;
-    margin-bottom: 12px;
-    border: 1px solid #ddd;
-    transition: background 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s;
 }
 
 .category-list__item:hover {
-    background: #f1f1f1;
+    background-color: #f1f1f1;
 }
 
 .category-list__name {
     font-size: 18px;
-    color: #444;
+    color: #333;
     font-weight: 500;
+    flex: 1;
 }
 
 .category-list__button {
+    background-color: transparent;
     border: none;
-    padding: 8px 14px;
-    margin-left: 8px;
-    border-radius: 6px;
+    font-size: 16px;
     cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 14px;
+    transition: transform 0.2s;
+}
+
+.category-list__button:hover {
+    transform: scale(1.1);
 }
 
 .category-list__button--edit {
-    background: #28a745;
-    color: #fff;
-    border: 1px solid #218838;
-}
-
-.category-list__button--edit:hover {
-    background: #218838;
+    color: #007bff;
 }
 
 .category-list__button--delete {
-    background: #dc3545;
-    color: #fff;
-    border: 1px solid #c82333;
+    color: #dc3545;
 }
 
-.category-list__button--delete:hover {
-    background: #c82333;
+.category-form__button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 16px;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .category-list {
-        padding: 20px;
-    }
-    .category-list__item {
-        flex-direction: column;
-        text-align: center;
-    }
-    .category-list__button {
-        width: 100%;
-        margin-top: 5px;
-    }
+.category-form__button--add {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.category-form__button:hover {
+    background-color: #0056b3;
+}
+
+.category-form__button:active {
+    background-color: #003366;
+}
+
+/* Overlay for the form */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 9%;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* The form styling */
+.category-form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+.category-form__title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.category-form__form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.category-form__input {
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    color: #333;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.category-form__input:focus {
+    border-color: #007bff;
+}
+
+.category-form__actions {
+    display: flex;
+    justify-content: space-between;
+}
+
+.category-form__button--submit {
+    background-color: #007bff;
+    color: white;
+}
+
+.category-form__button--submit:hover {
+    background-color: #0056b3;
+}
+
+.category-form__button--submit:active {
+    background-color: #003366;
+}
+
+.category-form__button--cancel {
+    background-color: #dc3545;
+    color: white;
+}
+
+.category-form__button--cancel:hover {
+    background-color: #c82333;
+}
+
+.category-form__button--cancel:active {
+    background-color: #9a1e1e;
+}
+
+.category-form__message {
+    margin-top: 15px;
+    text-align: center;
+    font-size: 14px;
+    color: #007bff;
+}
+
+.category-form__message.error {
+    color: #dc3545;
 }

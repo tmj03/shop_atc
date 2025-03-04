@@ -35,34 +35,6 @@ const getOrdersByUser = async (userId) => {
 const getAllOrders = async () => {
     return await Order.find().populate("items.productId userId");
 };
-// const updateOrderStatus = async (orderId, status) => {
-//     const order = await Order.findById(orderId);
-//     if (!order) throw new Error("Không tìm thấy đơn hàng!");
-
-//     order.status = status;
-//     await order.save();
-
-//     // Cập nhật doanh thu nếu đơn hàng đã giao
-//     if (status === "delivered") {
-//         const todayStart = new Date();
-//         todayStart.setHours(0, 0, 0, 0); // Đặt về 00:00:00
-
-//         const todayEnd = new Date();
-//         todayEnd.setHours(23, 59, 59, 999); // Đặt về 23:59:59
-
-//         let revenue = await Revenue.findOne({ date: { $gte: todayStart, $lte: todayEnd } });
-
-//         if (revenue) {
-//             revenue.totalRevenue += order.totalPrice;
-//             await revenue.save();
-//         } else {
-//             revenue = new Revenue({ date: todayStart, totalRevenue: order.totalPrice });
-//             await revenue.save();
-//         }
-//     }
-
-//     return order;
-// };
 
 const updateOrderStatus = async (orderId, status) => {
     const order = await Order.findById(orderId);

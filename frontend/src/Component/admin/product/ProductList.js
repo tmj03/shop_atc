@@ -9,7 +9,7 @@ const ProductList = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [loading, setLoading] = useState(true);
     const isMounted = useRef(false);
-    const [itemsPerPage, setItemsPerPage] = useState(2);  // Giới hạn số lượng sản phẩm hiển thị mỗi trang
+    const [itemsPerPage, setItemsPerPage] = useState(6);  // Giới hạn số lượng sản phẩm hiển thị mỗi trang
     const [currentPage, setCurrentPage] = useState(1);  // Trang hiện tại
 
     const fetchProducts = useCallback(async () => {
