@@ -9,6 +9,8 @@ const ProductMain = () => {
     const [selectedCategory, setSelectedCategory] = useState("");
     const [sortOrder, setSortOrder] = useState(""); // "asc" hoặc "desc"
     const [discountFilter, setDiscountFilter] = useState(false); // Toggle lọc sản phẩm giảm giá
+    const [currentPage, setCurrentPage] = useState(1); // Trang hiện tại
+    const [itemsPerPage] = useState(20); // Số lượng sản phẩm mỗi trang
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -42,19 +44,33 @@ const ProductMain = () => {
         filteredProducts.sort((a, b) => b.price - a.price);
     }
 
+    // Tính toán số lượng trang
+    const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+    
+    // Lấy sản phẩm cần hiển thị theo trang hiện tại
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const currentProducts = filteredProducts.slice(startIndex, startIndex + itemsPerPage);
+
+    // Chuyển trang
+    const handlePageChange = (page) => {
+        if (page >= 1 && page <= totalPages) {
+            setCurrentPage(page);
+        }
+    };
+
     return (
         <div className="product-main">
 
             {/* Bộ lọc */}
             <div className="filter-container">
-            {/* Thanh tìm kiếm */}
-            <input
-                type="text"
-                placeholder="Tìm kiếm sản phẩm..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="product-search"
-            />
+                {/* Thanh tìm kiếm */}
+                <input
+                    type="text"
+                    placeholder="Tìm kiếm sản phẩm..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="product-search"
+                />
                 {/* Lọc theo danh mục */}
                 <select onChange={(e) => setSelectedCategory(e.target.value)} className="filter-select">
                     <option value="">Tất cả danh mục</option>
@@ -81,7 +97,7 @@ const ProductMain = () => {
 
             {/* Hiển thị sản phẩm */}
             <div className="product-main__grid">
-                {filteredProducts.map(product => (
+                {currentProducts.map(product => (
                     <div key={product._id} className="product-card">
                         <img
                             src={product.image ? `http://localhost:3000${product.image}` : '/default-image.jpg'}
@@ -107,6 +123,35 @@ const ProductMain = () => {
                     </div>
                 ))}
             </div>
+
+            {/* Phân trang */}
+            <div className="pagination">
+                <button 
+                    onClick={() => handlePageChange(currentPage - 1)} 
+                    disabled={currentPage === 1}
+                >
+                    Trước
+                </button>
+
+                {/* Hiển thị các trang */}
+                {[...Array(totalPages)].map((_, index) => (
+                    <button 
+                        key={index + 1} 
+                        onClick={() => handlePageChange(index + 1)} 
+                        className={currentPage === index + 1 ? 'active' : ''}
+                    >
+                        {index + 1}
+                    </button>
+                ))}
+
+                <button 
+                    onClick={() => handlePageChange(currentPage + 1)} 
+                    disabled={currentPage === totalPages}
+                >
+                    Tiếp theo
+                </button>
+            </div>
+
         </div>
     );
 };

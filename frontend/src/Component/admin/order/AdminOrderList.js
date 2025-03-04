@@ -13,7 +13,7 @@ const AdminOrderList = () => {
 
   useEffect(() => {
     if (!token) {
-      toast.warning("Bạn cần đăng nhập!", { position: "top-center" });
+      toast.warning("Bạn cần đăng nhập để quản lý đơn hàng!", { position: "top-center" });
       navigate("/login");
       return;
     }
@@ -24,7 +24,7 @@ const AdminOrderList = () => {
         setOrders(data);
       } catch (error) {
         console.error("Lỗi khi tải danh sách đơn hàng:", error);
-        toast.error("Không thể tải danh sách đơn hàng!", { position: "top-right" });
+        toast.error("Không thể tải danh sách đơn hàng, vui lòng thử lại sau!", { position: "top-right" });
       } finally {
         setLoading(false);
       }
@@ -41,10 +41,10 @@ const AdminOrderList = () => {
           order._id === orderId ? { ...order, status: newStatus } : order
         )
       );
-      toast.success("Cập nhật trạng thái thành công!", { position: "top-right" });
+      toast.success("Trạng thái đơn hàng đã được cập nhật thành công!", { position: "top-right" });
     } catch (error) {
       console.error("Lỗi khi cập nhật trạng thái:", error);
-      toast.error("Cập nhật thất bại!", { position: "top-right" });
+      toast.error("Không thể cập nhật trạng thái đơn hàng, vui lòng thử lại!", { position: "top-right" });
     }
   };
 
@@ -52,7 +52,7 @@ const AdminOrderList = () => {
     navigate(`/orders/${orderId}`);
   };
 
-  if (loading) return <p className="order-list__loading">Đang tải...</p>;
+  if (loading) return <p className="order-list__loading">Đang tải danh sách đơn hàng...</p>;
 
   return (
     <div className="order-list">

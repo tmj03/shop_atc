@@ -48,47 +48,41 @@ const getAllProducts = async (req, res) => {
     }
 };
 
-// Cập nhật sản phẩm
+
 const updateProduct = async (req, res) => {
-    const { id } = req.params;
-
-    console.log('Dữ liệu yêu cầu:', req.body);  // Kiểm tra dữ liệu gửi lên
-    console.log('File hình ảnh:', req.file);  // Kiểm tra hình ảnh gửi lên
-
-    // Kiểm tra dữ liệu đầu vào
-    const errorMessage = validateProductData(req.body);
-    if (errorMessage) {
-        console.log('Lỗi dữ liệu:', errorMessage); // In lỗi nếu có
-        return res.status(400).json({ message: errorMessage });
-    }
-
-    try {
-        // Kiểm tra nếu sản phẩm tồn tại
-        const existingProduct = await productService.getProductById(id);
-        if (!existingProduct) {
-            return res.status(404).json({ message: 'Sản phẩm không tìm thấy' });
+    // Xử lý upload file trước khi thực hiện cập nhật
+    upload.single('image')(req, res, async (err) => {
+      if (err) {
+        return res.status(400).json({ message: 'Error uploading file' });
+      }
+  
+      // Lấy dữ liệu từ form
+      const { name, price, description, discount, quantity, category } = req.body;
+      const newImage = req.file ? `/uploads/images/${req.file.filename}` : ''; // Lấy đường dẫn ảnh nếu có
+  
+      try {
+        // Lấy thông tin sản phẩm cũ để xử lý xóa ảnh nếu có thay đổi
+        const product = await productService.getProductById(req.params.id);
+        const oldImage = product.image;
+  
+        // Nếu có ảnh mới và ảnh cũ khác với ảnh mới, xóa ảnh cũ
+        if (newImage && oldImage && oldImage !== newImage) {
+          const oldImagePath = path.join(__dirname, '..', '..', '..', oldImage); // Tạo đường dẫn tới ảnh cũ
+          if (fs.existsSync(oldImagePath)) {
+            fs.unlinkSync(oldImagePath); // Xóa ảnh cũ
+          }
         }
-
-        // Giữ lại hình ảnh cũ nếu không có hình ảnh mới
-        let image = existingProduct.image;
-        if (req.file) {
-            // Nếu có hình ảnh mới, thay thế hình ảnh cũ
-            image = `/uploads/images/${req.file.filename}`;
-
-            // Xóa hình ảnh cũ nếu có
-            const oldImagePath = path.join(__dirname, '..', '..', '..', existingProduct.image);
-            if (fs.existsSync(oldImagePath)) {
-                fs.unlinkSync(oldImagePath); // Xóa tệp hình ảnh cũ
-            }
-        }
-
-        const updatedProduct = await productService.updateProduct(id, { ...req.body, image });
-        res.status(200).json({ message: 'Cập nhật sản phẩm thành công', product: updatedProduct });
-    } catch (error) {
-        console.error('Lỗi khi cập nhật sản phẩm:', error.message); // In lỗi chi tiết
-        res.status(500).json({ error: error.message });
-    }
-};
+  
+        // Cập nhật sản phẩm với ảnh mới (hoặc ảnh cũ nếu không thay đổi)
+        const updatedProduct = await productService.updateProduct(req.params.id, 
+          { name, price, discount, quantity, description, category }, newImage || oldImage);
+        
+        res.status(200).json(updatedProduct);
+      } catch (error) {
+        res.status(500).json({ message: error.message });
+      }
+    });
+  };
 
 
 // Xóa sản phẩm

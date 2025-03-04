@@ -9,6 +9,8 @@ const ProductList = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [loading, setLoading] = useState(true);
     const isMounted = useRef(false);
+    const [itemsPerPage, setItemsPerPage] = useState(2);  // Giới hạn số lượng sản phẩm hiển thị mỗi trang
+    const [currentPage, setCurrentPage] = useState(1);  // Trang hiện tại
 
     const fetchProducts = useCallback(async () => {
         if (!isMounted.current) return;
@@ -55,6 +57,18 @@ const ProductList = () => {
         setIsModalOpen(false);
     };
 
+    // Phân trang
+    const totalPages = Math.ceil(products.length / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const currentProducts = products.slice(startIndex, startIndex + itemsPerPage);
+
+    // Chuyển trang
+    const handlePageChange = (page) => {
+        if (page >= 1 && page <= totalPages) {
+            setCurrentPage(page);
+        }
+    };
+
     return (
         <div className="product-list">
             <h2 className="product-list__header">Danh sách sản phẩm</h2>
@@ -72,49 +86,58 @@ const ProductList = () => {
             {loading ? (
                 <p>Đang tải danh sách sản phẩm...</p>
             ) : (
-                <table className="product-list__table">
-                    <thead>
-                        <tr>
-                            <th>Tên</th>
-                            <th>Giá</th>
-                            <th>Số lượng</th>
-                            <th>Giảm giá</th>
-                            <th>Danh mục</th>
-                            <th>Hình ảnh</th>
-                            <th>Mô tả</th>
-                            <th>Hành động</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {products.length > 0 ? (
-                            products.map((product) => (
-                                <tr className="product-list__row" key={product._id}>
-                                    <td>{product.name}</td>
-                                    <td>{product.price}đ</td>
-                                    <td>{product.quantity}</td>
-                                    <td>{product.discount}%</td>
-                                    <td>{product.category?.name || 'Không có danh mục'}</td>
-                                    <td>
-                                        <img
-                                            className="product-list__image"
-                                            src={product.image ? `http://localhost:3000${product.image}` : '/default-image.jpg'}
-                                            alt={product.name}
-                                        />
-                                    </td>
-                                    <td>{product.description || 'Không có mô tả'}</td>
-                                    <td>
-                                        <button className="product-list__button" onClick={() => openEditModal(product)}>Sửa</button>
-                                        <button className="product-list__button" onClick={() => handleDelete(product._id)}>Xóa</button>
-                                    </td>
-                                </tr>
-                            ))
-                        ) : (
+                <>
+                    <table className="product-list__table">
+                        <thead>
                             <tr>
-                                <td colSpan="8" style={{ textAlign: 'center' }}>Không có sản phẩm nào</td>
+                                <th>Tên</th>
+                                <th>Giá</th>
+                                <th>Số lượng</th>
+                                <th>Giảm giá</th>
+                                <th>Danh mục</th>
+                                <th>Hình ảnh</th>
+                                <th>Mô tả</th>
+                                <th>Hành động</th>
                             </tr>
-                        )}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {currentProducts.length > 0 ? (
+                                currentProducts.map((product) => (
+                                    <tr className="product-list__row" key={product._id}>
+                                        <td>{product.name}</td>
+                                        <td>{product.price}đ</td>
+                                        <td>{product.quantity}</td>
+                                        <td>{product.discount}%</td>
+                                        <td>{product.category?.name || 'Không có danh mục'}</td>
+                                        <td>
+                                            <img
+                                                className="product-list__image"
+                                                src={product.image ? `http://localhost:3000${product.image}` : '/default-image.jpg'}
+                                                alt={product.name}
+                                            />
+                                        </td>
+                                        <td>{product.description || 'Không có mô tả'}</td>
+                                        <td>
+                                            <button className="product-list__button" onClick={() => openEditModal(product)}>Sửa</button>
+                                            <button className="product-list__button" onClick={() => handleDelete(product._id)}>Xóa</button>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="8" style={{ textAlign: 'center' }}>Không có sản phẩm nào</td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+
+                    {/* Nút phân trang */}
+                    <div className="pagination">
+                        <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>Trước</button>
+                        <span>Trang {currentPage} / {totalPages}</span>
+                        <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>Tiếp theo</button>
+                    </div>
+                </>
             )}
         </div>
     );

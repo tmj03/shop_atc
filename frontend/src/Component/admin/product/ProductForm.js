@@ -89,7 +89,7 @@ const ProductForm = ({ product, onSuccess, onClose }) => {
         try {
             if (product) {
                 // Gửi yêu cầu PUT để cập nhật sản phẩm
-                const response = await updateProduct(product._id, formData);
+                const response = await updateProduct(product._id, form);
                 console.log(response);
             } else {
                 const response = await createProduct(form);

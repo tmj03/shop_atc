@@ -49,22 +49,19 @@ const getAllProducts = async () => {
     }
 };
 
-// Cập nhật sản phẩm
-const updateProduct = async (id, data) => {
+// Cập nhật thông tin sản phẩm
+const updateProduct = async (id, productData, image) => {
     try {
-        // Đảm bảo cập nhật thời gian sửa đổi tự động qua Mongoose
-        const updatedProduct = await Product.findByIdAndUpdate(id, data, { new: true });
-
-        if (!updatedProduct) {
-            throw new Error('Không tìm thấy sản phẩm');
-        }
-
-        return updatedProduct;
+      return await Product.findByIdAndUpdate(id, {
+        name: productData.name,
+        price: productData.price,
+        description: productData.description,
+        image: image || productData.image,
+      }, { new: true });
     } catch (error) {
-        throw new Error(error.message);
+      throw new Error('Error updating product');
     }
-};
-
+  };
 // Xóa sản phẩm
 const deleteProduct = async (id) => {
     try {
