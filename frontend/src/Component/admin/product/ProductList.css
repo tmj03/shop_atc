@@ -8,8 +8,10 @@ body {
 
 /* ===== PRODUCT LIST BLOCK ===== */
 .product-list {
+    position: relative;
     max-width: 1000px;
     margin: 0 auto;
+    min-height: 86vh;
     background: white;
     padding: 20px;
     border-radius: 8px;
@@ -41,8 +43,6 @@ body {
     width: 100%;
     border-collapse: collapse;
     background: white;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
     overflow: hidden;
 }
 
@@ -101,6 +101,14 @@ body {
 
 .modal__close:hover {
     color: red;
+}
+
+.product__pagination {
+    position: absolute;
+    display: flex;
+    gap: 10px;
+    bottom: 24px;
+    right: 24px;
 }
 
 /* ===== ANIMATIONS ===== */

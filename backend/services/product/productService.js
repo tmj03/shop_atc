@@ -55,6 +55,9 @@ const updateProduct = async (id, productData, image) => {
       return await Product.findByIdAndUpdate(id, {
         name: productData.name,
         price: productData.price,
+        discount: productData.discount,  // Giảm giá mặc định là 0 nếu không có
+        quantity: productData.quantity,   // Số lượng mặc định là 0 nếu không có
+        category: productData.category,
         description: productData.description,
         image: image || productData.image,
       }, { new: true });

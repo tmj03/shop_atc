@@ -132,7 +132,7 @@ const ProductList = () => {
                     </table>
 
                     {/* Nút phân trang */}
-                    <div className="pagination">
+                    <div className="product__pagination">
                         <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>Trước</button>
                         <span>Trang {currentPage} / {totalPages}</span>
                         <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>Tiếp theo</button>
